@@ -10,7 +10,7 @@ pip-delete-this-directory.txt
 .vscode/
 
 # Personal files
-test_aleatório.py
+tests_aleatórios/
 
 # Environments
 venv/
