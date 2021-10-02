@@ -1,13 +1,12 @@
-from _typeshed import Self
 from abc import abstractclassmethod
-from pygame.constants import K_LEFT, K_RIGHT
+from pygame.locals import *
 import pygame.draw
 import pygame.rect
 
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self, rect: pygame.rect.Rect, color):
-        super.__init__()
+        super().__init__()
         self.rect = rect
         self. color = color
 
@@ -26,16 +25,16 @@ class Player(Entity):
     def loop(self):
         self.move()
 
-    def move(self):
+    def move(self, right=False, left=False):
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[K_RIGHT]:
+
+        if pressed_keys[K_RIGHT] or right:
             if self.rect.right < 640:
                 self.rect.move_ip(5, 0)
 
-        if pressed_keys[K_LEFT]:
+        if pressed_keys[K_LEFT] or left:
             if self.rect.left > 0:
                 self.rect.move_ip(-5, 0)
-
 
 
 class Enemy(Entity):
