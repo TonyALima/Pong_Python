@@ -1,4 +1,3 @@
-from abc import abstractclassmethod
 from pygame.locals import *
 import pygame.draw
 import pygame.rect
@@ -55,6 +54,10 @@ class Ball(Entity):
     def loop(self):
         if self.is_coliding:
             self.calc_movement(self.calc_angle())
+            self.is_coliding = False
+        
+        if self.rect.right >= 640 or self.rect.left <= 0:
+            self.dx *= -1
         self.rect.move_ip(self.dx * self.speed,
                             self.dy * self.speed)
 

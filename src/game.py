@@ -1,6 +1,7 @@
 import pygame
 import pygame.time
 import pygame.draw
+from entities import *
 
 
 class Game:
@@ -10,6 +11,14 @@ class Game:
         self._display_surf = None
         self.size = self.weight, self.height = 640, 400
         self.FPS = pygame.time.Clock()
+        self.entities_dict = {'player': Player(),'ball': Ball(5)}
+        self.entities_dict['enemy'] = Enemy(1, self.entities_dict['ball'])
+        self.colide_rects = []
+        for key, value in self.entities_dict.items():
+            if key != 'ball':
+                self.colide_rects.append(value.rect)
+
+
 
     def on_init(self):
         pygame.init()
@@ -21,10 +30,19 @@ class Game:
             self._running = False
 
     def on_loop(self):
-        pass
+        colided_index = self.entities_dict[
+            'ball'].rect.collidelist(self.colide_rects)
+
+        if colided_index != -1:
+            self.entities_dict['ball'].is_coliding = True
+
+        for entity in self.entities_dict.values():
+            entity.loop()
 
     def on_render(self):
-        pass
+        self._display_surf.fill((0, 0, 0))
+        for entity in self.entities_dict.values():
+            entity.render(self._display_surf)
 
     def on_cleanup(self):
         pygame.quit()
