@@ -48,21 +48,22 @@ class Ball(Entity):
         super().__init__(pygame.rect.Rect(0, 0, 16, 16), (200, 200, 0), (320, 200))
         self.speed = speed
         self.direction_up = bool(getrandbits(1)) # random boolean
+        self.is_coliding = True
         self.dx: float
         self.dy: float
 
     def loop(self):
-        self.calc_movement(self.calc_angle())
+        if self.is_coliding:
+            self.calc_movement(self.calc_angle())
         self.rect.move_ip(self.dx * self.speed,
                             self.dy * self.speed)
 
     def calc_angle(self):
         if self.direction_up:
             angle = randint(30, 150)
-            self.direction_up = not self.direction_up
         else:
             angle = randint(210, 330)
-            self.direction_up = not self.direction_up
+        self.direction_up = not self.direction_up
 
         return angle
 
