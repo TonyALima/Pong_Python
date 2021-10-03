@@ -79,7 +79,7 @@ class Enemy(Entity):
         self.ball = ball
 
     def loop(self):
-        self.rect.move_ip(self.follow_ball, 0)
+        self.rect.move_ip(self.follow_ball(), 0)
 
     def follow_ball(self):
         return (self.ball.rect.centerx - self.rect.centerx) * self.precision
