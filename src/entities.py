@@ -2,13 +2,17 @@ from abc import abstractclassmethod
 from pygame.locals import *
 import pygame.draw
 import pygame.rect
+from random import getrandbits, randint
+from math import radians, cos, sin
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, rect: pygame.rect.Rect, color):
+    def __init__(self, rect: pygame.rect.Rect, color, initial_position: tuple):
         super().__init__()
         self.rect = rect
         self. color = color
+        self.initial_position = initial_position
+        self.rect.center = initial_position
 
     def loop(self):
         pass
@@ -16,12 +20,14 @@ class Entity(pygame.sprite.Sprite):
     def render(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
 
+    def restart(self):
+        self.rect.center = self.initial_position
+
 
 class Player(Entity):
     def __init__(self):
-        super().__init__(pygame.rect.Rect(220, 300, 200, 50), (0, 255, 0))
+        super().__init__(pygame.rect.Rect(0, 0, 200, 25), (0, 255, 0), (320, 350))
 
-    @abstractclassmethod
     def loop(self):
         self.move()
 
@@ -37,6 +43,43 @@ class Player(Entity):
                 self.rect.move_ip(-5, 0)
 
 
+class Ball(Entity):
+    def __init__(self, speed):
+        super().__init__(pygame.rect.Rect(0, 0, 16, 16), (200, 200, 0), (320, 200))
+        self.speed = speed
+        self.direction_up = bool(getrandbits(1)) # random boolean
+        self.dx: float
+        self.dy: float
+
+    def loop(self):
+        self.calc_movement(self.calc_angle())
+        self.rect.move_ip(self.dx * self.speed,
+                            self.dy * self.speed)
+
+    def calc_angle(self):
+        if self.direction_up:
+            angle = randint(30, 150)
+            self.direction_up = not self.direction_up
+        else:
+            angle = randint(210, 330)
+            self.direction_up = not self.direction_up
+
+        return angle
+
+    def calc_movement(self, angle):
+        self.dx = cos(radians(angle))
+        self.dy = sin(radians(angle))
+
+
 class Enemy(Entity):
-    def __init__(self):
-        super().__init__(pygame.rect.Rect(220, 50, 200, 50), (255, 0, 0))
+    def __init__(self, precision, ball: Ball):
+        super().__init__(pygame.rect.Rect(0, 0, 200, 25), (255, 0, 0), (320, 25))
+        self.precision = precision
+        self.ball = ball
+
+    def loop(self):
+        self.rect.move_ip(self.follow_ball, 0)
+
+    def follow_ball(self):
+        return (self.ball.rect.centerx - self.rect.centerx) * self.precision
+
