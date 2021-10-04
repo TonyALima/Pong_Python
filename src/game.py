@@ -18,23 +18,32 @@ class Game:
             if key != 'ball':
                 self.colide_rects.append(value.rect)
 
+    def check_colision(self):
+        colided_index = self.entities_dict[
+            'ball'].rect.collidelist(self.colide_rects)
+        
+        if colided_index != -1:
+            self.entities_dict['ball'].is_coliding = True
 
+    def check_goal(self):
+        if self.entities_dict['ball'].rect.top <= 0 or \
+            self.entities_dict['ball'].rect.bottom >= 400:
+            for entity in self.entities_dict.values():
+                entity.restart()
 
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
+        pygame.display.set_caption("Pong_Python")
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
 
     def on_loop(self):
-        colided_index = self.entities_dict[
-            'ball'].rect.collidelist(self.colide_rects)
-
-        if colided_index != -1:
-            self.entities_dict['ball'].is_coliding = True
+        self.check_colision()
+        self.check_goal()
 
         for entity in self.entities_dict.values():
             entity.loop()
