@@ -13,23 +13,21 @@ class Game:
         self.FPS = pygame.time.Clock()
         self.entities_dict = {'player': Player(),'ball': Ball(5)}
         self.entities_dict['enemy'] = Enemy(1, self.entities_dict['ball'])
-        self.colide_rects = []
+        self.collide_rects = []
         for key, value in self.entities_dict.items():
             if key != 'ball':
-                self.colide_rects.append(value.rect)
+                self.collide_rects.append(value.rect)
 
-    def check_colision(self):
-        colided_index = self.entities_dict[
-            'ball'].rect.collidelist(self.colide_rects)
+    def check_collision(self):
+        collided_index = self.entities_dict[
+            'ball'].rect.collidelist(self.collide_rects)
         
-        if colided_index != -1:
-            self.entities_dict['ball'].is_coliding = True
+        if collided_index != -1:
+            self.entities_dict['ball'].is_colliding = True
 
     def check_goal(self):
-        if self.entities_dict['ball'].rect.top <= 0 or \
-            self.entities_dict['ball'].rect.bottom >= 400:
-            for entity in self.entities_dict.values():
-                entity.restart()
+        return self.entities_dict['ball'].rect.top <= 0 or \
+            self.entities_dict['ball'].rect.bottom >= 400
 
     def on_init(self):
         pygame.init()
@@ -42,8 +40,12 @@ class Game:
             self._running = False
 
     def on_loop(self):
-        self.check_colision()
-        self.check_goal()
+        self.check_collision()
+        if self.check_goal():
+            for entity in self.entities_dict.values():
+                entity.restart()
+            
+            ## Todo: Mark the scoreboard
 
         for entity in self.entities_dict.values():
             entity.loop()

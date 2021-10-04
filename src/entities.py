@@ -25,7 +25,7 @@ class Entity(pygame.sprite.Sprite):
 
 class Player(Entity):
     def __init__(self):
-        super().__init__(pygame.rect.Rect(0, 0, 200, 25), (0, 255, 0), (320, 350))
+        super().__init__(pygame.rect.Rect(0, 0, 200, 20), (0, 255, 0), (320, 375))
 
     def loop(self):
         self.move()
@@ -47,14 +47,14 @@ class Ball(Entity):
         super().__init__(pygame.rect.Rect(0, 0, 16, 16), (200, 200, 0), (320, 200))
         self.speed = speed
         self.direction_up = bool(getrandbits(1)) # random boolean
-        self.is_coliding = True
+        self.is_colliding = True
         self.dx: float
         self.dy: float
 
     def loop(self):
-        if self.is_coliding:
+        if self.is_colliding:
             self.calc_movement(self.calc_angle())
-            self.is_coliding = False
+            self.is_colliding = False
         
         if self.rect.right >= 640 or self.rect.left <= 0:
             self.dx *= -1
@@ -77,7 +77,7 @@ class Ball(Entity):
 
 class Enemy(Entity):
     def __init__(self, precision, ball: Ball):
-        super().__init__(pygame.rect.Rect(0, 0, 200, 25), (255, 0, 0), (320, 25))
+        super().__init__(pygame.rect.Rect(0, 0, 200, 20), (255, 0, 0), (320, 25))
         self.precision = precision
         self.ball = ball
 
