@@ -1,6 +1,8 @@
 import pygame
 import pygame.time
 import pygame.draw
+import pygame.font
+import pygame.surface
 from entities import *
 
 
@@ -17,6 +19,7 @@ class Game:
         for key, value in self.entities_dict.items():
             if key != 'ball':
                 self.collide_rects.append(value.rect)
+        self.scoreboard = Scoreboard()
 
     def check_collision(self):
         collided_index = self.entities_dict[
@@ -51,9 +54,10 @@ class Game:
             entity.loop()
 
     def on_render(self):
-        self._display_surf.fill((0, 0, 0))
+        self._display_surf.fill((3, 61, 18, 24))
         for entity in self.entities_dict.values():
             entity.render(self._display_surf)
+        self.scoreboard.render(self._display_surf)
 
     def on_cleanup(self):
         pygame.quit()
@@ -78,6 +82,29 @@ class Game:
 
         self.on_cleanup()
 
+
+class Scoreboard():
+    def __init__(self):
+        pygame.font.init()
+        self.player_score = {'rect': pygame.Rect(0, 186, 20, 28), 
+                                'score': 0}
+        self.enemy_score = {'rect': pygame.Rect(620, 186, 20, 28), 
+                                'score': 0}
+        self.rects_color = (8, 152, 196, 77)
+        self.font = pygame.font.SysFont('arial', 22)
+
+    def render(self, surface):
+        self.draw_score(surface, self.player_score)
+        self.draw_score(surface, self.enemy_score)
+        
+
+    def draw_score(self, surface, entity):
+        pygame.draw.rect(surface, self.rects_color, entity['rect'])
+        textsurface = self.font.render(f"{entity['score']}", False, (255, 255, 255))
+        surface.blit(textsurface, (entity['rect'].left + 5, 191))
+
+
 if __name__ == "__main__" :
     theGame = Game()
     theGame.on_execute()
+    
