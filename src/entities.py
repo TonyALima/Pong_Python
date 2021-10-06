@@ -50,16 +50,39 @@ class Ball(Entity):
         self.is_colliding = True
         self.dx: float
         self.dy: float
+        self.x_cooldown = 0
+        self.y_cooldown = 0
 
     def loop(self):
-        if self.is_colliding:
-            self.calc_movement(self.calc_angle())
-            self.is_colliding = False
+        if self.is_colliding and self.y_cooldown <= 0:
+            self.move_at_colliding()
         
-        if self.rect.right >= 640 or self.rect.left <= 0:
-            self.dx *= -1
+        if self.is_bouncing() and self.x_cooldown <= 0:
+            self.bounce()
+
         self.rect.move_ip(self.dx * self.speed,
                             self.dy * self.speed)
+
+        self.cooldown()
+
+    def move_at_colliding(self):
+        self.calc_movement(self.calc_angle())
+        self.y_cooldown = 30
+
+    def cooldown(self):
+        self.x_cooldown -= 1
+        self.y_cooldown -= 1
+        self.is_colliding = False
+
+    def bounce(self):
+        if self.x_cooldown <= 0:
+            self.dx *= -1
+            self.x_cooldown = 3
+        else:
+            self.x_cooldown -= 1
+
+    def is_bouncing(self):
+        return self.rect.right >= 640 or self.rect.left <= 0
 
     def calc_angle(self):
         if self.direction_up:
