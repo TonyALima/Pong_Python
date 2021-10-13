@@ -7,13 +7,13 @@ from game import Game
 
 class Window():
 
-    def __init__(self, objects_to_render = None):
+    def __init__(self, objects_to_render: dict):
         self._running = True
         self._display_surf = None
         self.size = self.weight, self.height = 640, 400
         self.FPS = pygame.time.Clock()
         self.objects_to_render = objects_to_render
-        self.object_in_render = objects_to_render['menu']
+        self.object_in_render = objects_to_render['main_menu']['obj']
 
     def on_init(self):
         pygame.init()
@@ -29,9 +29,11 @@ class Window():
         if event.type == pygame.QUIT:
             self._running = False
 
-    def update(self, command):
-        if command == 0:
-            self.object_in_render = self.objects_to_render['game']
+    def update(self, trigger):
+        for obj in self.objects_to_render.values():
+            if obj['trigger'] == trigger:
+                self.object_in_render = obj['obj']
+                break
 
     def on_execute(self):
         if self.on_init() == False:
@@ -42,7 +44,7 @@ class Window():
                 self.on_event(event)
             
             # Main loop
-            if isinstance(self.object_in_render, (Game, MainMenu)):
+            if isinstance(self.object_in_render, (Game, Menu)):
                 self.object_in_render.on_loop()
                 self.object_in_render.on_render(self._display_surf)
 
@@ -55,11 +57,10 @@ class Window():
         self.on_cleanup()
 
 
-class MainMenu():
+class Menu():
     
-    def __init__(self):
+    def __init__(self, buttons_text):
         self.font = pygame.font.SysFont('arial', 64)
-        buttons_text = ['Play', 'Options']
         self.buttons = [self.create_button(text, index)
                         for index, text in enumerate(buttons_text)]
 
@@ -79,7 +80,7 @@ class MainMenu():
                 self.high_light['position'] += 1
 
         def k_enter():
-            selected_button = self.high_light['position']
+            selected_button = self.buttons[self.high_light['position']]['text']
             self.notify_all(selected_button)
 
         return {
