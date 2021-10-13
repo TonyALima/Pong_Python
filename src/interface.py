@@ -1,18 +1,19 @@
 import pygame
 import pygame.font
 import pygame.draw
-from pygame.locals import K_UP, K_DOWN
+from pygame.locals import K_UP, K_DOWN, K_RETURN
 from game import Game
 
 
 class Window():
 
-    def __init__(self, obj_on_screen = None):
+    def __init__(self, objects_to_render = None):
         self._running = True
         self._display_surf = None
         self.size = self.weight, self.height = 640, 400
         self.FPS = pygame.time.Clock()
-        self.obj_on_screen = obj_on_screen
+        self.objects_to_render = objects_to_render
+        self.object_in_render = objects_to_render['menu']
 
     def on_init(self):
         pygame.init()
@@ -28,8 +29,9 @@ class Window():
         if event.type == pygame.QUIT:
             self._running = False
 
-    def update():
-        pass
+    def update(self, command):
+        if command == 0:
+            self.object_in_render = self.objects_to_render['game']
 
     def on_execute(self):
         if self.on_init() == False:
@@ -40,9 +42,9 @@ class Window():
                 self.on_event(event)
             
             # Main loop
-            if isinstance(self.obj_on_screen, (Game, MainMenu)):
-                self.obj_on_screen.on_loop()
-                self.obj_on_screen.on_render(self._display_surf)
+            if isinstance(self.object_in_render, (Game, MainMenu)):
+                self.object_in_render.on_loop()
+                self.object_in_render.on_render(self._display_surf)
 
             # Control and show FPS
             self.FPS.tick(60)
@@ -64,20 +66,45 @@ class MainMenu():
         self.high_light = {'position': 0,
                             'rect': pygame.Rect(0, 0, 410, 110),
                             'color': (200, 200, 200)}
+        self.observers = []
+        self.accepted_moves = self.create_moves()
+
+    def create_moves(self):
+        def k_up():
+            if self.high_light['position'] > 0:
+                self.high_light['position'] -= 1
+
+        def k_down():
+            if self.high_light['position'] < len(self.buttons) - 1:
+                self.high_light['position'] += 1
+
+        def k_enter():
+            selected_button = self.high_light['position']
+            self.notify_all(selected_button)
+
+        return {
+            K_UP: k_up,
+            K_DOWN: k_down,
+            K_RETURN: k_enter
+        }
+
+    def notify_all(self, command):
+        print('notifying')
+        for observer_function in self.observers:
+            observer_function(command)
 
     def update_high_light(self):
-        pressed_keys = pygame.key.get_pressed()
-
-        if pressed_keys[K_UP] and self.high_light['position'] > 0:
-            self.high_light['position'] -= 1
-
-        if pressed_keys[K_DOWN] and self.high_light['position'] < len(self.buttons) - 1:
-            self.high_light['position'] += 1
-
         active_button_center = self.buttons[self.high_light['position']]['rect'].center
         self.high_light['rect'].center = active_button_center
 
+    def keyboard_listener(self):
+        pressed_keys = pygame.key.get_pressed()
+        for key in self.accepted_moves.keys():
+            if pressed_keys[key]:
+                self.accepted_moves[key]()
+
     def on_loop(self):
+        self.keyboard_listener()
         self.update_high_light()
 
     def on_render(self, surface):

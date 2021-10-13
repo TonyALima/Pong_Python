@@ -55,7 +55,6 @@ class Game:
 
 class Scoreboard():
     def __init__(self):
-        pygame.font.init()
         self.player_score = {'rect': pygame.Rect(620, 186, 20, 28), 
                                 'score': 0}
         self.enemy_score = {'rect': pygame.Rect(0, 186, 20, 28), 
