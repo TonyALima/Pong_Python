@@ -46,11 +46,11 @@ class Game:
         for entity in self.entities_dict.values():
             entity.loop()
 
-    def on_render(self, display_surf):
-        display_surf.fill((3, 61, 18, 24))
+    def on_render(self, surface):
+        surface.fill((3, 61, 18, 24))
         for entity in self.entities_dict.values():
-            entity.render(display_surf)
-        self.scoreboard.render(display_surf)
+            entity.render(surface)
+        self.scoreboard.render(surface)
 
 
 class Scoreboard():

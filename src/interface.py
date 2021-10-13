@@ -1,4 +1,6 @@
 import pygame
+import pygame.font
+import pygame.draw
 from game import Game
 
 
@@ -37,7 +39,7 @@ class Window():
                 self.on_event(event)
             
             # Main loop
-            if isinstance(self.obj_on_screen, (Game)):
+            if isinstance(self.obj_on_screen, (Game, MainMenu)):
                 self.obj_on_screen.on_loop()
                 self.obj_on_screen.on_render(self._display_surf)
 
@@ -49,3 +51,41 @@ class Window():
 
         self.on_cleanup()
 
+
+class MainMenu():
+    
+    def __init__(self):
+        self.font = pygame.font.SysFont('arial', 64)
+        buttons_text = ['Play', 'Options']
+        self.buttons = [self.create_button(text, index)
+                        for index, text in enumerate(buttons_text)]
+
+    def on_loop(self):
+        pass
+
+    def on_render(self, surface):
+        surface.fill((70, 232, 202, 91))
+        
+        for button in self.buttons:
+            self.draw_button(surface, button)
+
+    def create_button(self, text, position):
+        rect_top = 75 + (position * 150)
+        rect = pygame.Rect(120, rect_top, 400, 100)
+        text_color = (255, 255, 255, 200)
+        back_color = (0, 0, 0)
+        text_surface = self.font.render(text, False, text_color)
+
+        return {'text_surface': text_surface,
+                'text': text,
+                'rect': rect,
+                'color': back_color}
+
+    def draw_button(self, suface: pygame.Surface, button):
+        pygame.draw.rect(suface, button['color'], button['rect'])
+
+        text_width, text_height = self.font.size(button['text'])
+        text_left = button['rect'].left + (button['rect'].width - text_width) / 2
+        text_top = button['rect'].top + (button['rect'].height - text_height) / 2
+
+        suface.blit(button['text_surface'], (text_left, text_top))
