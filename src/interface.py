@@ -1,6 +1,7 @@
 import pygame
 import pygame.font
 import pygame.draw
+from pygame.locals import K_UP, K_DOWN
 from game import Game
 
 
@@ -60,11 +61,30 @@ class MainMenu():
         self.buttons = [self.create_button(text, index)
                         for index, text in enumerate(buttons_text)]
 
+        self.high_light = {'position': 0,
+                            'rect': pygame.Rect(0, 0, 410, 110),
+                            'color': (200, 200, 200)}
+
+    def update_high_light(self):
+        pressed_keys = pygame.key.get_pressed()
+
+        if pressed_keys[K_UP] and self.high_light['position'] > 0:
+            self.high_light['position'] -= 1
+
+        if pressed_keys[K_DOWN] and self.high_light['position'] < len(self.buttons) - 1:
+            self.high_light['position'] += 1
+
+        active_button_center = self.buttons[self.high_light['position']]['rect'].center
+        self.high_light['rect'].center = active_button_center
+
     def on_loop(self):
-        pass
+        self.update_high_light()
 
     def on_render(self, surface):
-        surface.fill((70, 232, 202, 91))
+        surface.fill((25, 83, 72))
+        
+        pygame.draw.rect(surface, self.high_light['color'],
+                            self.high_light['rect'])
         
         for button in self.buttons:
             self.draw_button(surface, button)
@@ -72,8 +92,8 @@ class MainMenu():
     def create_button(self, text, position):
         rect_top = 75 + (position * 150)
         rect = pygame.Rect(120, rect_top, 400, 100)
-        text_color = (255, 255, 255, 200)
-        back_color = (0, 0, 0)
+        text_color = (200, 200, 200)
+        back_color = (50, 50, 50)
         text_surface = self.font.render(text, False, text_color)
 
         return {'text_surface': text_surface,
