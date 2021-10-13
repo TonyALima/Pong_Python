@@ -9,10 +9,6 @@ from entities import *
 class Game:
 
     def __init__(self):
-        self._running = True
-        self._display_surf = None
-        self.size = self.weight, self.height = 640, 400
-        self.FPS = pygame.time.Clock()
         self.entities_dict = {'player': Player(),'ball': Ball(5)}
         self.entities_dict['enemy'] = Enemy(1, self.entities_dict['ball'])
         self.collide_rects = []
@@ -38,16 +34,6 @@ class Game:
         else:
             return None
 
-    def on_init(self):
-        pygame.init()
-        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self._running = True
-        pygame.display.set_caption("Pong_Python")
-
-    def on_event(self, event):
-        if event.type == pygame.QUIT:
-            self._running = False
-
     def on_loop(self):
         self.check_collision()
         who_scored = self.check_goal()
@@ -60,34 +46,11 @@ class Game:
         for entity in self.entities_dict.values():
             entity.loop()
 
-    def on_render(self):
-        self._display_surf.fill((3, 61, 18, 24))
+    def on_render(self, display_surf):
+        display_surf.fill((3, 61, 18, 24))
         for entity in self.entities_dict.values():
-            entity.render(self._display_surf)
-        self.scoreboard.render(self._display_surf)
-
-    def on_cleanup(self):
-        pygame.quit()
-
-    def on_execute(self):
-        if self.on_init() == False:
-            self._running = False
-        
-        while( self._running ):
-            for event in pygame.event.get():
-                self.on_event(event)
-            
-            # Game loop
-            self.on_loop()
-            self.on_render()
-
-            # Control and show FPS
-            self.FPS.tick(60)
-            print(f'FPS: {self.FPS.get_fps()}')
-
-            pygame.display.update()
-
-        self.on_cleanup()
+            entity.render(display_surf)
+        self.scoreboard.render(display_surf)
 
 
 class Scoreboard():
@@ -115,7 +78,3 @@ class Scoreboard():
             self.player_score['score'] += 1
         if who == 'enemy':
             self.enemy_score['score'] += 1
-
-if __name__ == "__main__" :
-    theGame = Game()
-    theGame.on_execute()
