@@ -35,6 +35,12 @@ class Window():
                 self.object_in_render = obj['obj']
                 break
 
+    def keyboard_listener(self):
+        pressed_keys = pygame.key.get_pressed()
+        for key in self.object_in_render.accepted_moves.keys():
+            if pressed_keys[key]:
+                self.object_in_render.accepted_moves[key]()
+
     def on_execute(self):
         if self.on_init() == False:
             self._running = False
@@ -45,6 +51,7 @@ class Window():
             
             # Main loop
             if isinstance(self.object_in_render, (Game, Menu)):
+                self.keyboard_listener()
                 self.object_in_render.on_loop()
                 self.object_in_render.on_render(self._display_surf)
 
@@ -105,14 +112,7 @@ class Menu():
         active_button_center = self.buttons[self.high_light['position']]['rect'].center
         self.high_light['rect'].center = active_button_center
 
-    def keyboard_listener(self):
-        pressed_keys = pygame.key.get_pressed()
-        for key in self.accepted_moves.keys():
-            if pressed_keys[key]:
-                self.accepted_moves[key]()
-
     def on_loop(self):
-        self.keyboard_listener()
         self.update_high_light()
 
     def on_render(self, surface):

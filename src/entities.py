@@ -31,13 +31,12 @@ class Player(Entity):
         self.move()
 
     def move(self, right=False, left=False):
-        pressed_keys = pygame.key.get_pressed()
 
-        if pressed_keys[K_RIGHT] or right:
+        if right:
             if self.rect.right < 640:
                 self.rect.move_ip(5, 0)
 
-        if pressed_keys[K_LEFT] or left:
+        if left:
             if self.rect.left > 0:
                 self.rect.move_ip(-5, 0)
 

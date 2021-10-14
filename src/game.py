@@ -16,6 +16,32 @@ class Game:
             if key != 'ball':
                 self.collide_rects.append(value.rect)
         self.scoreboard = Scoreboard()
+        self.accepted_moves = self.create_moves()
+        self.observers = []
+
+    def create_moves(self):
+        def k_right():
+            self.entities_dict['player'].move(right=True)
+
+        def k_left():
+            self.entities_dict['player'].move(left=True)
+
+        def k_esc():
+            self.notify_all('Esc')
+
+        return {
+            K_RIGHT: k_right,
+            K_LEFT: k_left,
+            K_ESCAPE: k_esc
+        }
+
+    def subscribe(self, observer_function):
+        self.observers.append(observer_function)
+
+    def notify_all(self, command):
+        print('notifying')
+        for observer_function in self.observers:
+            observer_function(command)
 
     def check_collision(self):
         collided_index = self.entities_dict[

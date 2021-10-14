@@ -10,6 +10,6 @@ objects_to_render = {
 
 the_window = Window(objects_to_render)
 for obj in objects_to_render.values():
-    if isinstance(obj['obj'], Menu):
+    if isinstance(obj['obj'], (Game, Menu)):
         obj['obj'].subscribe(the_window.update)
 the_window.on_execute()
