@@ -1,7 +1,7 @@
 import pygame
 import pygame.font
 import pygame.draw
-from pygame.locals import K_UP, K_DOWN, K_RETURN
+from pygame.locals import K_UP, K_DOWN, K_RETURN, K_ESCAPE
 from game import Game
 
 
@@ -10,7 +10,7 @@ class Window():
     def __init__(self, objects_to_render: dict):
         self._running = True
         self._display_surf = None
-        self.size = self.weight, self.height = 640, 400
+        self.size = self.width, self.height = 640, 400
         self.FPS = pygame.time.Clock()
         self.objects_to_render = objects_to_render
         self.object_in_render = objects_to_render['main_menu']['obj']
@@ -83,16 +83,23 @@ class Menu():
             selected_button = self.buttons[self.high_light['position']]['text']
             self.notify_all(selected_button)
 
+        def k_esc():
+            self.notify_all('Esc')
+
         return {
             K_UP: k_up,
             K_DOWN: k_down,
-            K_RETURN: k_enter
+            K_RETURN: k_enter,
+            K_ESCAPE: k_esc
         }
 
     def notify_all(self, command):
         print('notifying')
         for observer_function in self.observers:
             observer_function(command)
+
+    def subscribe(self, observer_function):
+        self.observers.append(observer_function)
 
     def update_high_light(self):
         active_button_center = self.buttons[self.high_light['position']]['rect'].center

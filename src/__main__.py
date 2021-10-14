@@ -3,11 +3,13 @@ from interface import *
 
 pygame.font.init()
 objects_to_render = {
-    'main_menu': {'obj': Menu(['Play', 'Options']),'trigger': ''},
     'game': {'obj': Game(),'trigger': 'Play'},
-    'options': {'obj': Menu(['Difficulty', 'Game Mode']), 'trigger': 'Options'}
+    'main_menu': {'obj': Menu(['Play', 'Options']),'trigger': 'Esc'},
+    'options_menu': {'obj': Menu(['Difficulty', 'Game Mode']), 'trigger': 'Options'}
     }
 
 the_window = Window(objects_to_render)
-objects_to_render['main_menu']['obj'].observers.append(the_window.update)
+for obj in objects_to_render.values():
+    if isinstance(obj['obj'], Menu):
+        obj['obj'].subscribe(the_window.update)
 the_window.on_execute()
