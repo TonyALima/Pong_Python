@@ -1,6 +1,7 @@
 import pygame
 import pygame.font
 import pygame.draw
+from math import floor
 from pygame.locals import K_UP, K_DOWN, K_RETURN, K_ESCAPE
 from game import Game
 
@@ -68,12 +69,11 @@ class Menu():
     
     def __init__(self, buttons_text):
         self.font = pygame.font.SysFont('arial', 64)
-        self.buttons = [self.create_button(text, index)
+        size_button = self.calc_size_button(len(buttons_text))
+        self.buttons = [self.create_button(text, index, size_button)
                         for index, text in enumerate(buttons_text)]
 
-        self.high_light = {'position': 0,
-                            'rect': pygame.Rect(0, 0, 410, 110),
-                            'color': (200, 200, 200)}
+        self.high_light =self.create_high_light(size_button)
         self.observers = []
         self.accepted_moves = self.create_moves()
 
@@ -124,9 +124,12 @@ class Menu():
         for button in self.buttons:
             self.draw_button(surface, button)
 
-    def create_button(self, text, position):
-        rect_top = 75 + (position * 150)
-        rect = pygame.Rect(120, rect_top, 400, 100)
+    def create_button(self, text, position, size):
+        height, spacing, top_space = size
+        width = 4 * height
+        rect_top = 75 + top_space + (position * (height + spacing))
+        rect_left = (640 - width) / 2
+        rect = pygame.Rect(rect_left, rect_top, width, height)
         text_color = (200, 200, 200)
         back_color = (50, 50, 50)
         text_surface = self.font.render(text, False, text_color)
@@ -135,6 +138,19 @@ class Menu():
                 'text': text,
                 'rect': rect,
                 'color': back_color}
+
+    def create_high_light(self, size):
+        height = size[0] + 10
+        width = 4 * size[0] +10
+        return {'position': 0,
+                'rect': pygame.Rect(0, 0, width, height),
+                'color': (200, 200, 200)}
+
+    def calc_size_button(self, amount):
+        height = floor((250/amount)*0.8)
+        spacing = floor((250-height*amount)/(amount -1))
+        rest_top = floor((250-height*amount) - (spacing *(amount-1)))
+        return height, spacing, rest_top
 
     def draw_button(self, suface: pygame.Surface, button):
         pygame.draw.rect(suface, button['color'], button['rect'])
