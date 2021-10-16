@@ -33,7 +33,7 @@ class Window():
 
     def update(self, trigger):
         for obj in self.objects_to_render.values():
-            if obj['trigger'] == trigger:
+            if trigger in obj['trigger']:
                 self.object_in_render = obj['obj']
                 break
 
