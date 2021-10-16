@@ -44,12 +44,13 @@ class Ball(Entity):
     def __init__(self):
         super().__init__(pygame.rect.Rect(0, 0, 16, 16), (200, 200, 0), (320, 200))
         self.direction_up = bool(getrandbits(1)) # random boolean
-        self.is_colliding = True
+        self.is_colliding = False
         self.dx: float
         self.dy: float
         self.x_cooldown = 0
         self.y_cooldown = 0
         self.speed = 0
+        self.calc_movement(self.calc_angle())
 
     def loop(self):
         if self.is_colliding and self.y_cooldown <= 0:
@@ -94,6 +95,10 @@ class Ball(Entity):
     def calc_movement(self, angle):
         self.dx = cos(radians(angle))
         self.dy = sin(radians(angle))
+
+    def restart(self):
+        super().restart()
+        self.calc_movement(self.calc_angle())
 
 
 class Enemy(Entity):
