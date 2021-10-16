@@ -15,6 +15,7 @@ class Window():
         self.FPS = pygame.time.Clock()
         self.objects_to_render = objects_to_render
         self.object_in_render = objects_to_render['main_menu']['obj']
+        self.is_key_pressed = False
 
     def on_init(self):
         pygame.init()
@@ -37,10 +38,15 @@ class Window():
                 break
 
     def keyboard_listener(self):
+        in_game = isinstance(self.object_in_render, Game)
+        key_released = True
         pressed_keys = pygame.key.get_pressed()
         for key in self.object_in_render.accepted_moves.keys():
             if pressed_keys[key]:
-                self.object_in_render.accepted_moves[key]()
+                key_released = False
+                if in_game or not self.is_key_pressed:
+                    self.object_in_render.accepted_moves[key]()
+        self.is_key_pressed = not key_released
 
     def on_execute(self):
         if self.on_init() == False:
