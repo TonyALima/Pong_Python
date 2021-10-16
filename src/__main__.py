@@ -5,7 +5,8 @@ pygame.font.init()
 objects_to_render = {
     'game': {'obj': Game(),'trigger': 'Play'},
     'main_menu': {'obj': Menu(['Play', 'Options']),'trigger': 'Esc'},
-    'options_menu': {'obj': Menu(['Difficulty', 'Game Mode']), 'trigger': 'Options'}
+    'options_menu': {'obj': Menu(['Difficulty', 'Game Mode']), 'trigger': 'Options'},
+    'difficulty_menu': {'obj': Menu(['Hard', 'Medium', 'Easy']), 'trigger': 'Difficulty'}
     }
 
 the_window = Window(objects_to_render)
