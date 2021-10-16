@@ -42,15 +42,15 @@ class Player(Entity):
 
 
 class Ball(Entity):
-    def __init__(self, speed):
+    def __init__(self):
         super().__init__(pygame.rect.Rect(0, 0, 16, 16), (200, 200, 0), (320, 200))
-        self.speed = speed
         self.direction_up = bool(getrandbits(1)) # random boolean
         self.is_colliding = True
         self.dx: float
         self.dy: float
         self.x_cooldown = 0
         self.y_cooldown = 0
+        self.speed = 0
 
     def loop(self):
         if self.is_colliding and self.y_cooldown <= 0:
@@ -98,14 +98,14 @@ class Ball(Entity):
 
 
 class Enemy(Entity):
-    def __init__(self, precision, ball: Ball):
+    def __init__(self, ball: Ball):
         super().__init__(pygame.rect.Rect(0, 0, 200, 20), (255, 0, 0), (320, 25))
-        self.precision = precision
+        self.accuracy = 1
         self.ball = ball
 
     def loop(self):
         self.rect.move_ip(self.follow_ball(), 0)
 
     def follow_ball(self):
-        return (self.ball.rect.centerx - self.rect.centerx) * self.precision
+        return (self.ball.rect.centerx - self.rect.centerx) * self.accuracy
 

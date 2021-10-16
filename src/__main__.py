@@ -18,4 +18,7 @@ the_window = Window(objects_to_render)
 for obj in objects_to_render.values():
     if isinstance(obj['obj'], (Game, Menu)):
         obj['obj'].subscribe(the_window.update)
+    if obj['trigger'] in 'Difficulty Game Mode':
+        obj['obj'].subscribe(objects_to_render['game']['obj'].update)
+
 the_window.on_execute()

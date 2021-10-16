@@ -9,8 +9,8 @@ from entities import *
 class Game:
 
     def __init__(self):
-        self.entities_dict = {'player': Player(),'ball': Ball(5)}
-        self.entities_dict['enemy'] = Enemy(1, self.entities_dict['ball'])
+        self.entities_dict = {'player': Player(),'ball': Ball()}
+        self.entities_dict['enemy'] = Enemy(self.entities_dict['ball'])
         self.collide_rects = []
         for key, value in self.entities_dict.items():
             if key != 'ball':
@@ -18,6 +18,7 @@ class Game:
         self.scoreboard = Scoreboard()
         self.accepted_moves = self.create_moves()
         self.observers = []
+        self.update_difficulty('Medium')
 
     def create_moves(self):
         def k_right():
@@ -42,6 +43,24 @@ class Game:
         print('notifying')
         for observer_function in self.observers:
             observer_function(command)
+
+    def update_difficulty(self, difficulty):
+        difficulties = {
+            'Hard': (9, 0.06),
+            'Medium': (6.5, 0.038),
+            'Easy': (5, 0.02)
+        }
+        if difficulty in difficulties.keys():
+            ball_speed, enemy_accuracy = difficulties[difficulty]
+            self.entities_dict['ball'].speed = ball_speed
+            self.entities_dict['enemy'].accuracy = enemy_accuracy
+
+    def update_game_mode(self, mode):
+        pass
+
+    def update(self, command):
+        self.update_difficulty(command)
+        self.update_game_mode(command)
 
     def check_collision(self):
         collided_index = self.entities_dict[

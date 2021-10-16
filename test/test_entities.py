@@ -52,7 +52,7 @@ class TestEnemy(unittest.TestCase):
     
     def test_follow_ball(self):
         test_ball = entities.Ball(speed=1)
-        self.test_enemy = entities.Enemy(precision=1, ball=test_ball)
+        self.test_enemy = entities.Enemy(accuracy=1, ball=test_ball)
         test_ball.loop()
         next_position = self.test_enemy.rect.centerx + self.test_enemy.follow_ball()
 
