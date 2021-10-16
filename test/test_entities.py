@@ -54,7 +54,7 @@ class TestEnemy(unittest.TestCase):
         test_ball = entities.Ball(speed=1)
         self.test_enemy = entities.Enemy(accuracy=1, ball=test_ball)
         test_ball.loop()
-        next_position = self.test_enemy.rect.centerx + self.test_enemy.follow_ball()
+        next_position = self.test_enemy.rect.centerx + self.test_enemy.move()
 
         self.assertEqual(test_ball.rect.centerx, next_position)
 

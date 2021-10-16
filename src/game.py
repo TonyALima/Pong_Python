@@ -1,4 +1,7 @@
 import pygame
+from pygame.locals import K_RIGHT, K_LEFT, K_ESCAPE
+from pygame.locals import K_a as K_A
+from pygame.locals import K_d as K_D
 import pygame.time
 import pygame.draw
 import pygame.font
@@ -27,12 +30,22 @@ class Game:
         def k_left():
             self.entities_dict['player'].move(left=True)
 
+        def k_a():
+            if not self.entities_dict['enemy'].is_npc:
+                self.entities_dict['enemy'].move(left=True)
+
+        def k_d():
+            if not self.entities_dict['enemy'].is_npc:
+                self.entities_dict['enemy'].move(right=True)
+
         def k_esc():
             self.notify_all('Esc')
 
         return {
             K_RIGHT: k_right,
             K_LEFT: k_left,
+            K_A: k_a,
+            K_D: k_d,
             K_ESCAPE: k_esc
         }
 
@@ -56,7 +69,10 @@ class Game:
             self.entities_dict['enemy'].accuracy = enemy_accuracy
 
     def update_game_mode(self, mode):
-        pass
+        if mode == 'Single Player':
+            self.entities_dict['enemy'].is_npc = True
+        if mode == 'Multiplayer':
+            self.entities_dict['enemy'].is_npc = False
 
     def update(self, command):
         self.update_difficulty(command)

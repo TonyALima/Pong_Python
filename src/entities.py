@@ -1,4 +1,3 @@
-from pygame.locals import *
 import pygame.draw
 import pygame.rect
 from random import getrandbits, randint
@@ -28,7 +27,7 @@ class Player(Entity):
         super().__init__(pygame.rect.Rect(0, 0, 200, 20), (0, 255, 0), (320, 375))
 
     def loop(self):
-        self.move()
+        pass
 
     def move(self, right=False, left=False):
 
@@ -102,10 +101,21 @@ class Enemy(Entity):
         super().__init__(pygame.rect.Rect(0, 0, 200, 20), (255, 0, 0), (320, 25))
         self.accuracy = 1
         self.ball = ball
+        self.is_npc = True
 
     def loop(self):
-        self.rect.move_ip(self.follow_ball(), 0)
+        self.move()
 
-    def follow_ball(self):
-        return (self.ball.rect.centerx - self.rect.centerx) * self.accuracy
+    def move(self, right=False, left=False):
+        if self.is_npc:
+            movement = (self.ball.rect.centerx - self.rect.centerx) * self.accuracy
+            self.rect.move_ip(movement, 0)
+        else:
+            if right:
+                if self.rect.right < 640:
+                    self.rect.move_ip(5, 0)
+
+            if left:
+                if self.rect.left > 0:
+                    self.rect.move_ip(-5, 0)
 
