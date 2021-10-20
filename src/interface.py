@@ -73,8 +73,8 @@ class Window():
 
 class Menu():
     
-    def __init__(self, buttons_text):
-        self.font = pygame.font.SysFont('arial', 64)
+    def __init__(self, buttons_text, font_size):
+        self.font = pygame.font.SysFont('arial', font_size)
         size_button = self.calc_size_button(len(buttons_text))
         self.buttons = [self.create_button(text, index, size_button)
                         for index, text in enumerate(buttons_text)]
@@ -131,7 +131,7 @@ class Menu():
 
     def create_button(self, text, position, size):
         height, spacing, top_space = size
-        width = 4 * height
+        width = 400
         rect_top = 75 + top_space + (position * (height + spacing))
         rect_left = (640 - width) / 2
         rect = pygame.Rect(rect_left, rect_top, width, height)
@@ -146,15 +146,20 @@ class Menu():
 
     def create_high_light(self, size):
         height = size[0] + 10
-        width = 4 * size[0] +10
+        width = 410
         return {'position': 0,
                 'rect': pygame.Rect(0, 0, width, height),
                 'color': (200, 200, 200)}
 
     def calc_size_button(self, amount):
-        height = floor((250/amount)*0.8)
-        spacing = floor((250-height*amount)/(amount -1))
-        rest_top = floor((250-height*amount) - (spacing *(amount-1)))
+        if amount == 1:
+            height = 250
+            spacing = 0
+            rest_top = 0
+        else:
+            height = floor((250/amount)*0.8)
+            spacing = floor((250-height*amount)/(amount -1))
+            rest_top = floor((250-height*amount) - (spacing *(amount-1)))
         return height, spacing, rest_top
 
     def draw_button(self, suface: pygame.Surface, button):
