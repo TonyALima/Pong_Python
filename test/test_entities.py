@@ -7,8 +7,6 @@ import entities
 from random import randint
 
 
-pygame.init()
-
 class TestPlayer(unittest.TestCase):
     def test_move(self):
         test_player = entities.Player()
@@ -60,5 +58,7 @@ class TestEnemy(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    pygame.init()
     unittest.main()
+    pygame.quit()
 

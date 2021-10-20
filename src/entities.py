@@ -26,9 +26,6 @@ class Player(Entity):
     def __init__(self):
         super().__init__(pygame.rect.Rect(0, 0, 200, 20), (0, 255, 0), (320, 375))
 
-    def loop(self):
-        pass
-
     def move(self, right=False, left=False):
 
         if right:
