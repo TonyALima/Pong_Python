@@ -1,4 +1,5 @@
 import pygame
+from webbrowser import open as open_website
 from pygame.locals import K_UP, K_DOWN, K_RETURN, K_ESCAPE
 from math import floor
 from game import Game
@@ -14,6 +15,11 @@ class Window():
         self.objects_to_render = {}
         self.object_in_render = None
         self.is_key_pressed = False
+        self.websites = {
+            'Author: Tony Albert Lima': 'https://github.com/TonyALima',
+            'License': 'https://github.com/TonyALima/Pong_Python/blob/master/LICENSE',
+            'official repository': 'https://github.com/TonyALima/Pong_Python'
+        }
 
     def subscribe_to_render(self, obj: dict):
         self.objects_to_render.update(obj)
@@ -35,6 +41,9 @@ class Window():
             self._running = False
 
     def update(self, trigger):
+        if trigger in self.websites.keys():
+            open_website(self.websites[trigger])
+
         for obj in self.objects_to_render.values():
             if trigger in obj['trigger']:
                 self.object_in_render = obj['obj']
