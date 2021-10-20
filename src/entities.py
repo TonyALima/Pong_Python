@@ -71,11 +71,8 @@ class Ball(Entity):
         self.is_colliding = False
 
     def bounce(self):
-        if self.x_cooldown <= 0:
-            self.dx *= -1
-            self.x_cooldown = 3
-        else:
-            self.x_cooldown -= 1
+        self.dx *= -1
+        self.x_cooldown = 3
 
     def is_bouncing(self):
         return self.rect.right >= 640 or self.rect.left <= 0
