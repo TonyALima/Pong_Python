@@ -53,7 +53,6 @@ class Game:
         self.observers.append(observer_function)
 
     def notify_all(self, command):
-        print('notifying')
         for observer_function in self.observers:
             observer_function(command)
 

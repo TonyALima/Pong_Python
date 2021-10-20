@@ -10,6 +10,9 @@ from pygame.locals import K_d as K_D
 
 class TestGame(unittest.TestCase):
 
+    def observer_function(self, command):
+        self.command_observed = command
+
     def test_moves(self):
         pygame.font.init()
 
@@ -41,6 +44,14 @@ class TestGame(unittest.TestCase):
         moves[K_A]()
         expected_value = test_game.entities_dict['enemy'].initial_position[0] - 5
         value = test_game.entities_dict['enemy'].rect.centerx
+        self.assertEqual(value, expected_value)
+
+        test_game = Game()
+        test_game.subscribe(self.observer_function)
+        moves = test_game.create_moves()
+        moves[K_ESCAPE]()
+        expected_value = 'Esc'
+        value = self.command_observed
         self.assertEqual(value, expected_value)
 
         pygame.font.quit()

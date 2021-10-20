@@ -64,7 +64,6 @@ class Window():
 
             # Control and show FPS
             self.FPS.tick(60)
-            print(f'FPS: {self.FPS.get_fps()}')
 
             pygame.display.update()
 
@@ -107,7 +106,6 @@ class Menu():
         }
 
     def notify_all(self, command):
-        print('notifying')
         for observer_function in self.observers:
             observer_function(command)
 
