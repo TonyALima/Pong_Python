@@ -2,10 +2,6 @@ import pygame
 from pygame.locals import K_RIGHT, K_LEFT, K_ESCAPE
 from pygame.locals import K_a as K_A
 from pygame.locals import K_d as K_D
-import pygame.time
-import pygame.draw
-import pygame.font
-import pygame.surface
 from entities import *
 
 

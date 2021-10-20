@@ -8,7 +8,7 @@ class Entity(pygame.sprite.Sprite):
     def __init__(self, rect: pygame.rect.Rect, color, initial_position: tuple):
         super().__init__()
         self.rect = rect
-        self. color = color
+        self.color = color
         self.initial_position = initial_position
         self.rect.center = initial_position
 
@@ -117,4 +117,3 @@ class Enemy(Entity):
             if left:
                 if self.rect.left > 0:
                     self.rect.move_ip(-5, 0)
-

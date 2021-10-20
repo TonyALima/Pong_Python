@@ -1,30 +1,33 @@
 import pygame
-import pygame.font
-import pygame.draw
-from math import floor
 from pygame.locals import K_UP, K_DOWN, K_RETURN, K_ESCAPE
+from math import floor
 from game import Game
 
 
 class Window():
 
-    def __init__(self, objects_to_render: dict):
+    def __init__(self):
         self._running = True
         self._display_surf = None
         self.size = self.width, self.height = 640, 400
         self.FPS = pygame.time.Clock()
-        self.objects_to_render = objects_to_render
-        self.object_in_render = objects_to_render['main_menu']['obj']
+        self.objects_to_render = {}
+        self.object_in_render = None
         self.is_key_pressed = False
+
+    def subscribe_to_render(self, obj: dict):
+        self.objects_to_render.update(obj)
 
     def on_init(self):
         pygame.init()
+        pygame.font.init()
         self._display_surf = pygame.display.set_mode(
                     self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
         pygame.display.set_caption("Pong_Python")
 
     def on_cleanup(self):
+        pygame.font.quit()
         pygame.quit()
 
     def on_event(self, event):
@@ -49,8 +52,6 @@ class Window():
         self.is_key_pressed = not key_released
 
     def on_execute(self):
-        if self.on_init() == False:
-            self._running = False
         
         while( self._running ):
             for event in pygame.event.get():
